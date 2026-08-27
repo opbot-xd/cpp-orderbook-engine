@@ -56,7 +56,6 @@ MatchEvent MatchingEngine::process_order(const IncomingOrder& order) {
         return event;
     }
 
-    // Step 1: Match against the opposite side (no allocation yet)
     IncomingOrder incoming = order;
     if (order.side == Side::Buy) {
         match_buy(incoming, event);
@@ -65,16 +64,12 @@ MatchEvent MatchingEngine::process_order(const IncomingOrder& order) {
     }
 
     Quantity filled = order.quantity - incoming.quantity;
-
-    // Step 2: Determine final status and whether to rest in book
     bool should_rest = false;
     OrderStatus final_status;
 
     if (incoming.quantity == 0) {
-        // Fully filled
         final_status = OrderStatus::Filled;
     } else if (filled > 0) {
-        // Partially filled
         if (order.type == OrderType::IOC || order.type == OrderType::FOK) {
             final_status = OrderStatus::Cancelled;
         } else if (order.type == OrderType::Limit) {
@@ -84,10 +79,7 @@ MatchEvent MatchingEngine::process_order(const IncomingOrder& order) {
             final_status = OrderStatus::Cancelled;
         }
     } else {
-        // No fill at all
-        if (order.type == OrderType::Market) {
-            final_status = OrderStatus::Cancelled;
-        } else if (order.type == OrderType::IOC || order.type == OrderType::FOK) {
+        if (order.type == OrderType::Market || order.type == OrderType::IOC || order.type == OrderType::FOK) {
             final_status = OrderStatus::Cancelled;
         } else if (order.type == OrderType::Limit) {
             should_rest = true;
@@ -97,11 +89,9 @@ MatchEvent MatchingEngine::process_order(const IncomingOrder& order) {
         }
     }
 
-    // Step 3: If the order should rest, allocate from pool and insert
     if (should_rest) {
         Order* pool_order = pool_.allocate();
         if (!pool_order) {
-            // Pool exhausted
             final_status = OrderStatus::Cancelled;
             should_rest = false;
         } else {
@@ -119,7 +109,6 @@ MatchEvent MatchingEngine::process_order(const IncomingOrder& order) {
         }
     }
 
-    // Step 4: Generate execution report for the incoming order
     ExecutionReport report;
     report.order_id = order.id;
     report.status = final_status;

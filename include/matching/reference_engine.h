@@ -9,16 +9,7 @@
 
 namespace matching {
 
-// Naive but obviously-correct matching engine.
-// Uses std::map<Price, std::list<Order>> — O(log n) price lookup,
-// individually heap-allocated list nodes, etc.
-//
-// This is intentionally slow. Its purpose is differential testing:
-// feed the same sequence of orders into both this and the optimized
-// engine, and assert that all outputs are identical.
-//
-// This is NOT the engine you'd deploy — it's the oracle you test against.
-
+// Reference matching engine for differential verification.
 class ReferenceEngine {
 public:
     ReferenceEngine() = default;

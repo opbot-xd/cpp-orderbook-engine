@@ -11,10 +11,7 @@
 
 using namespace matching;
 
-// Simple HDR-style histogram for latency recording.
-// Uses fixed buckets with power-of-2 boundaries for fast lookup.
-// Not a full HDR histogram, but captures the key idea and gives
-// accurate percentiles for the expected latency range (1ns - 1ms).
+// Logarithmic latency histogram for nanosecond-precision percentiles.
 class LatencyHistogram {
 public:
     static constexpr int NUM_BUCKETS = 4096;

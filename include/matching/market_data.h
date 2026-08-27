@@ -8,13 +8,7 @@
 
 namespace matching {
 
-// Market data handler: receives trade events and execution reports
-// from the matching engine and distributes them.
-//
-// In a real system, this would serialize to network and push to
-// market data feeds. For this project, it stores events for testing
-// and can optionally write to an SPSC queue for async output.
-
+// Market data handler: trade notification and top-of-book dissemination.
 class MarketDataHandler {
 public:
     using TradeCallback = std::function<void(const Trade&)>;

@@ -7,19 +7,8 @@
 
 namespace matching {
 
-// Array-indexed price ladder: maps price directly to array index.
-// Prices are discretized into ticks. The ladder covers a fixed range
-// around a reference base price.
-//
-// O(1) access to any price level via simple arithmetic:
-//   index = (price - base_price) / tick_size
-//
-// The bitset provides O(1) best-bid/best-ask lookup via CLZ/CTZ.
-//
-// Design trade-offs (explainable in interview):
-// - Wastes memory on empty price levels → acceptable for low-latency
-// - Requires re-centering if price moves out of range
-// - Fixed maximum depth → bounded, predictable memory layout
+// Array-indexed price ladder mapping discretized tick prices to levels.
+// Bitset provides O(1) best bid/ask discovery via hardware CLZ/CTZ.
 
 class PriceLadder {
 public:

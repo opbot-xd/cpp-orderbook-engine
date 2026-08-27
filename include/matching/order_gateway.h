@@ -9,15 +9,7 @@
 
 namespace matching {
 
-// Order gateway: validates incoming orders, assigns sequence numbers,
-// and feeds them into the matching engine via the SPSC queue.
-//
-// Architecture:
-//   [Network thread(s)] → gateway.validate() → SPSC queue → [Matching thread]
-//
-// The gateway is the "producer" side of the SPSC queue.
-// It never touches the order book — only validation and sequencing.
-
+// Ingress order gateway: validates incoming orders and assigns sequence numbers.
 class OrderGateway {
 public:
     explicit OrderGateway(SPSCQueue<IncomingOrder, 65536>& queue)

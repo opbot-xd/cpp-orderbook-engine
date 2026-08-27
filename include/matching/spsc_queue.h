@@ -7,9 +7,7 @@
 
 namespace matching {
 
-// Single-Producer Single-Consumer lock-free ring buffer.
-// Fixed size, cache-line aligned head/tail to avoid false sharing.
-// Uses acquire/release ordering — no seq_cst overhead.
+// Lock-free Single-Producer Single-Consumer circular ring buffer.
 template<typename T, std::size_t Capacity>
 class SPSCQueue {
     static_assert((Capacity & (Capacity - 1)) == 0, "Capacity must be a power of 2");

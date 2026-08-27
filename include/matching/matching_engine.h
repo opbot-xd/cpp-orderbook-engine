@@ -11,17 +11,7 @@
 
 namespace matching {
 
-// The optimized matching engine.
-// - Single-threaded: no locks needed inside the book.
-// - Array-indexed price ladder for O(1) price level access.
-// - Intrusive linked lists (FIFO) for time priority.
-// - Direct-indexed order pool for O(1) allocation.
-// - HashMap from OrderID → Order* for O(1) cancel/lookup.
-//
-// Architecture (interview explainer):
-// This engine is designed to be the single-threaded core inside a
-// Disruptor-style pipeline. Orders arrive via an SPSC queue, and
-// this engine processes them one at a time. No concurrency inside.
+// Single-threaded price-time priority matching engine.
 class MatchingEngine {
 public:
     explicit MatchingEngine(int max_price_levels = PriceLadder::DEFAULT_MAX_LEVELS,

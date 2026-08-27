@@ -8,10 +8,7 @@
 
 namespace matching {
 
-// Dynamic bitset supporting O(1) find-highest-set and find-lowest-set
-// via compiler intrinsics (CLZ/CTZ). Used for finding best bid/ask.
-// Size is determined at construction time.
-
+// Dynamic bitset supporting O(1) find-highest and find-lowest via CLZ/CTZ.
 class DynamicBitset {
 public:
     explicit DynamicBitset(int num_bits)
